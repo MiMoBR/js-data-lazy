@@ -1,0 +1,38 @@
+HTML
+
+<img data-lazy="filename.png" >
+
+JS
+
+/*  Get Ready / Lazy */
+(function(){
+  const ATTRIBUTE_SELECTOR = 'data-lazy'
+  const images = document.querySelectorAll(`[${ATTRIBUTE_SELECTOR}]`) || []
+
+  bind()
+
+  function bind() {
+    const options = {
+      root: null,
+      rootMargin: '0px 0px 200px 0px',
+      threshold: 0
+    }
+
+    const observer = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting) {
+          observer.unobserve(entry.target)
+          loadElement(entry.target)
+        }
+      })
+    }, options)
+
+    images.forEach((image) => {
+      observer.observe(image)
+    })
+  }
+
+  function loadElement(target) {
+    target.src = target.getAttribute(ATTRIBUTE_SELECTOR)
+  }
+})()
